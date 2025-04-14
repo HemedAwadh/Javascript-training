@@ -1,12 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Javascript</title>
+    <title>Salary & Net Pay Calculator</title>
+    <style>
+        /* Global Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        /* Container Styles */
+        .container {
+            max-width: 600px;
+            background-color: #ffffff;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading & Instruction Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2C3E50;
+        }
+
+        p.instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Result Table Styles */
+        .result {
+            margin-top: 30px;
+        }
+
+        .result table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .result th,
+        .result td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .result .final {
+            font-weight: bold;
+            color: #2C3E50;
+        }
+    </style>
 </head>
+
 <body>
-    <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptatum placeat quibusdam quos, nam accusamus consequuntur dolorem quisquam praesentium pariatur, debitis est assumenda maxime itaque ab deleniti molestias culpa quia?</P>
-    
+    <div class="container">
+        <h1>Salary & Net Pay Calculator</h1>
+        <p class="instructions">
+            Enter your Basic Salary and Benefits to compute your Gross Salary, statutory deductions, and Net Pay.
+        </p>
+
+        <form id="salaryForm">
+            <div class="input-group">
+                <label for="basicSalary">Basic Salary (KES):</label>
+                <input type="number" id="basicSalary" placeholder="e.g., 30000.00" step="0.01" required>
+            </div>
+            <div class="input-group">
+                <label for="benefits">Benefits (KES):</label>
+                <input type="number" id="benefits" placeholder="e.g., 5000.00" step="0.01" required>
+            </div>
+
+            <button type="submit" style="background-color: #28a745; color: white;">Calculate</button>
+
+            <button type="button" id="resetBtn" style="margin-top: 10px; background-color: #dc3545;">Reset</button>
+        </form>
+
+        <div class="result" id="result" style="display: none;">
+            <table>
+                <tr>
+                    <th>Description</th>
+                    <th>Result (KES)</th>
+                </tr>
+                <tr>
+                    <td>Basic Salary</td>
+                    <td id="displayBasic">0.00</td>
+                </tr>
+                <tr>
+                    <td>Benefits</td>
+                    <td id="displayBenefits">0.00</td>
+                </tr>
+                <tr>
+                    <td>Gross Salary</td>
+                    <td id="displayGross">0.00</td>
+                </tr>
+                <tr>
+                    <td>NSSF</td>
+                    <td id="displayNSSF">0.00</td>
+                </tr>
+                <tr>
+                    <td>Taxable Income</td>
+                    <td id="displayTaxable">0.00</td>
+                </tr>
+                <tr>
+                    <td>PAYE (after Relief)</td>
+                    <td id="displayPAYE">0.00</td>
+                </tr>
+                <tr>
+                    <td>NHIF</td>
+                    <td id="displayNHIF">0.00</td>
+                </tr>
+                <tr class="final">
+                    <td>Net Salary</td>
+                    <td id="displayNet">0.00</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Function to calculate NSSF (Revised Rates)
+        function calculateNSSF(gross) {
+            const tier1 = 360; // Fixed for all employees
+            let tier2 = 0;
+            if (gross > 18000) {
+                tier2 = 720;
+            }
+            return tier1 + tier2;
+        }
+
+        // Function to calculate NHIF based on salary bands
+        function calculateNHIF(gross) {
+            let nhif = 0;
+            if (gross < 6000) {
+                nhif = 150;
+            } else if (gross < 8000) {
+                nhif = 300;
+            } else if (gross < 12000) {
+                nhif = 400;
+            } else if (gross < 15000) {
+                nhif = 500;
+            } else if (gross < 20000) {
+                nhif = 600;
+            } else if (gross < 25000) {
+                nhif = 750;
+            } else if (gross < 30000) {
+                nhif = 850;
+            } else if (gross < 35000) {
+                nhif = 900;
+            } else if (gross < 40000) {
+                nhif = 950;
+            } else if (gross < 45000) {
+                nhif = 1000;
+            } else if (gross < 50000) {
+                nhif = 1100;
+            } else if (gross < 60000) {
+                nhif = 1200;
+            } else if (gross < 70000) {
+                nhif = 1300;
+            } else if (gross < 80000) {
+                nhif = 1400;
+            } else if (gross < 90000) {
+                nhif = 1500;
+            } else if (gross < 100000) {
+                nhif = 1600;
+            } else {
+                nhif = 1700;
+            }
+            return nhif;
+        }
+
+        // Function to calculate PAYE using KRA tax bands
+        function calculatePAYE(taxableIncome) {
+            let tax = 0;
+            // First KES 24,000 at 10%
+            const band1 = Math.min(taxableIncome, 24000);
+            tax += band1 * 0.10;
+
+            // Next KES 8,333 at 25%
+            let remaining = taxableIncome - band1;
+            const band2 = Math.min(Math.max(remaining, 0), 8333);
+            tax += band2 * 0.25;
+
+            // Remaining amount over KES 32,333 at 30%
+            remaining -= band2;
+            if (remaining > 0) {
+                tax += remaining * 0.30;
+            }
+
+            // Apply personal relief of KES 2,400 per month
+            let paye = tax - 2400;
+            return paye < 0 ? 0 : paye;
+        }
+
+        // Form event listener to process calculation
+        document.getElementById('salaryForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const basicSalary = parseFloat(document.getElementById('basicSalary').value);
+            const benefits = parseFloat(document.getElementById('benefits').value);
+
+            if (isNaN(basicSalary) || basicSalary < 0 || isNaN(benefits) || benefits < 0) {
+                alert("Please enter valid numbers for both Basic Salary and Benefits.");
+                return;
+            }
+
+
+            // Reset button functionality
+            document.getElementById('resetBtn').addEventListener('click', function () {
+                document.getElementById('salaryForm').reset(); // Reset form fields
+                document.getElementById('result').style.display = "none"; // Hide results
+            });
+
+
+            // Calculate Gross Salary from Basic Salary and Benefits
+            const gross = basicSalary + benefits;
+
+            // Calculate NSSF
+            const nssf = calculateNSSF(gross);
+
+            // Taxable Income = Gross Salary - NSSF Contribution
+            const taxableIncome = gross - nssf;
+
+            // Calculate PAYE deduction
+            const paye = calculatePAYE(taxableIncome);
+
+            // Calculate NHIF deduction
+            const nhif = calculateNHIF(gross);
+
+            // Calculate Net Salary
+            const netSalary = gross - (nssf + paye + nhif);
+
+
+            // Update the display elements with formatted results
+            document.getElementById('displayBasic').textContent = basicSalary.toFixed(2);
+            document.getElementById('displayBenefits').textContent = benefits.toFixed(2);
+            document.getElementById('displayGross').textContent = gross.toFixed(2);
+            document.getElementById('displayNSSF').textContent = nssf.toFixed(2);
+            document.getElementById('displayTaxable').textContent = taxableIncome.toFixed(2);
+            document.getElementById('displayPAYE').textContent = paye.toFixed(2);
+            document.getElementById('displayNHIF').textContent = nhif.toFixed(2);
+            document.getElementById('displayNet').textContent = netSalary.toFixed(2);
+
+            document.getElementById('result').style.display = "block";
+        });
+    </script>
 </body>
+
 </html>

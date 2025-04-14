@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM</title>
+</head>
+
+<body>
+    <form id="my_form" action="">
+        <label for="">Full Name</label><br>
+        <input type="text" id="input1"  placeholder="Enter your full Name" name="FullName"><br>
+        <label for="">Email</label><br>
+        <input type="email" id="input2"  placeholder="Enter your Email" name="email"><br>
+        <label for="">Phone Number</label><br>
+        <input type="number"  id="input3" placeholder="Enter Your Phone Number" name="PhoneNumber"><br>
+       
+        <button type="submit">Submit</button>
+
+    </form>
+        <span id="result"></span>
+
+    <script>
+        var form = document.getElementById('my_form');
+        var result = document.getElementById('result');
+
+        form.addEventListener('submit' ,function(event){
+            event.preventDefault();
+            var f_name = document.getElementById('input1').value;
+            var email_address = document.getElementById('input2').value;
+            var contact = document.getElementById('input3').value;
+            if(f_name == "" || email_address=="" || contact==""){
+                result.style.color = "Red";
+                result.innerHTML = " Ensure all fields are set";
+            }else{
+                result.innerHTML =  `first name is : ${f_name},Email address is : ${email_address},phone Number is :${contact} `;
+            }
+
+            //alert(`first name is : ${f_name},Email address is : ${email_address},phone Number is :${contact}`);
+            
+        });
+
+    </script>
+</body>
+
+</html>

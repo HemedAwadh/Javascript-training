@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures</title>
+</head>
+
+<body>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit possimus dolorum sint id incidunt quidem rerum
+        dolorem. Vero, odio vitae aspernatur ad ducimus eveniet accusantium in hic nam error facere!</p>
+    <script>
+         //Arrays
+        const countries = ["Kenya", "Uganda", "Tanzania"];
+        console.log(countries[2]);
+        console.log(countries.sort());
+        console.log(countries.toLocaleString());
+        console.log(countries.join("-"));
+        console.log(countries.reverse());
+        console.log(countries.splice(1,2));
+        console.log(countries.flat());
+        console.log(countries.toString());
+        console.log(countries.every(country => country.length > 4));
+
+        // filter
+        let num = [6,12,,30,18,24,26,36,37,38,39,66,666,600];
+        div6 = num.filter(x => x%6 ===0);
+        console.log(div6);
+        // this will display numbers divisible by 6
+
+        //JSON Objects
+        let person = {"name" : " John Doe " ,"dob": "1997","loc": "MSA"};
+        console.log(person)
+
+    </script>
+</body>
+
+</html>

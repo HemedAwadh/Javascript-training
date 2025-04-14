@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY FORM</title>
+</head>
+
+<body>
+
+    <form id="my_form" action="">
+        <label for="">First Name</label><br>
+        <input type="text" id="input1" placeholder="Enter your First Name" name="FirstName"><br>
+        <label for="">Last Name</label><br>
+        <input type="text" id="input2" placeholder="Enter Your Last Name" name="LastName"><br>
+        <label for="">Email</label><br>
+        <input type="email" id="input3" placeholder="Enter your Email" name="email"><br>
+
+
+        <button type="submit">Submit</button>
+
+    </form>
+    <span id="result"></span>
+    <table>
+        <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+    </tr>
+    <tr>
+        <td id="td1"></td>
+        <td id="td2"></td>
+        <td id="td3"></td>
+    </tr>
+    </table>
+
+    <script>
+        var form = document.getElementById("my_form");
+        var result = document.getElementById("result");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            var firstName = document.getElementById('input1').value;
+            var lastName = document.getElementById('input2').value;
+            var emailAddress = document.getElementById('input3').value;
+
+            document.getElementById("td1").innerText = firstName;
+            document.getElementById("td2").innerText = lastName;
+            document.getElementById("td3").innerText = emailAddress;
+            
+
+            if (firstName == "" || lastName == "" || emailAddress == "") {
+                result.style.color = "Red";
+                result.innerHTML = " Ensure all fields are set";
+            } else {
+                result.innerHTML = `First Name is : ${firstName},Last Name is : ${lastName},Email Address is :${emailAddress} `;
+            }
+                
+            //alert(`first name is : ${f_name},Email address is : ${email_address},phone Number is :${contact}`);
+
+        });
+
+
+    </script>
+</body>
+
+</html>
